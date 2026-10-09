@@ -1,58 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+
+# FACEBOOK API REST
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <h2 align="center">FACEBOOK API REST</h2>
 </p>
 
-## About Laravel
+<p align="center">
+  <strong>Proyecto de Arquitectura y Desarrollo Backend</strong><br>
+  API REST para gestionar publicaciones, fotografías, comentarios y reacciones mediante Laravel.
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🌐 Descripción del proyecto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Facebook API REST** es una aplicación backend desarrollada con **Laravel 13** como parte de la asignatura Arquitectura y Desarrollo Backend de la Universidad Autónoma de Bucaramanga (UNAB).
 
-## Learning Laravel
+El proyecto simula las interacciones básicas de una red social, permitiendo crear publicaciones con fotografías, consultar contenido, agregar comentarios, registrar reacciones de «Me gusta» y eliminar publicaciones.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+La aplicación utiliza una arquitectura REST, el ORM Eloquent y una base de datos SQLite. Las operaciones se realizan mediante peticiones HTTP y las respuestas se entregan en formato JSON.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 👩‍💻 Autoría
 
-## Agentic Development
+<table>
+  <tr>
+    <td>
+      <img src="https://github.com/marinino5.png" width="130" alt="Perfil de GitHub">
+    </td>
+    <td>
+      <strong>Autora:</strong> Mariana Niño Solano<br>
+      <strong>Universidad:</strong> Universidad Autónoma de Bucaramanga<br>
+      <strong>Asignatura:</strong> Arquitectura y Desarrollo Backend<br>
+      <strong>Docente:</strong> Fabián Enrique Suárez Carvajal<br>
+      <strong>Proyecto:</strong> Facebook API REST
+    </td>
+  </tr>
+</table>
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
+
+## ⚡ Enfoque del proyecto
+
+**Facebook API REST** está orientado al desarrollo de servicios backend para la comunicación entre aplicaciones mediante HTTP.
+
+El taller permite aplicar conceptos de enrutamiento, controladores, modelos Eloquent, relaciones entre tablas, validación de datos y almacenamiento de archivos.
+
+Su funcionamiento se comprobó mediante pruebas realizadas con Bruno, validando las operaciones y los códigos de respuesta HTTP correspondientes.
+
+---
+
+## 🔗 Funcionalidades y endpoints
+
+| Método | Endpoint | Funcionalidad |
+|---|---|---|
+| POST | `/api/posts` | Crear publicación con imágenes |
+| GET | `/api/posts` | Listar publicaciones |
+| GET | `/api/posts/{id}` | Consultar publicación |
+| POST | `/api/posts/{id}/comments` | Agregar comentario |
+| GET | `/api/posts/{id}/comments` | Listar comentarios |
+| POST | `/api/posts/{id}/like` | Dar Me gusta |
+| DELETE | `/api/posts/{id}` | Eliminar publicación |
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- **Laravel 13:** framework backend.
+- **PHP 8.5:** lenguaje de programación utilizado.
+- **SQLite:** base de datos.
+- **Eloquent ORM:** modelos y relaciones.
+- **Bruno:** pruebas de peticiones HTTP.
+- **Postman Collection v2.1:** formato de exportación de pruebas.
+- **Git y GitHub:** control de versiones.
+
+---
+
+## 🚀 Ejecución del proyecto
+
+Clonar el repositorio e instalar las dependencias:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/marinino5/Facebook-api.git
+cd Facebook-api
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Configurar el entorno y la base de datos:
 
-## Contributing
+```bash
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate
+php artisan storage:link
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Iniciar el servidor:
 
-## Code of Conduct
+```bash
+php artisan serve
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+La API estará disponible en:
 
-## Security Vulnerabilities
+`http://127.0.0.1:8000/api/posts`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+La configuración de la base de datos debe utilizar `DB_CONNECTION=sqlite`.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🧪 Pruebas de la API
+
+Las funcionalidades fueron verificadas con **Bruno**, obteniendo respuestas HTTP `200`, `201`, `204`, `404` y `422`.
+
+El repositorio incluye:
+
+- `bruno-tests/`: colección con las ocho peticiones del taller.
+- `facebook-api-postman-collection.json`: colección exportada en formato Postman v2.1.
+
+Para probar la carga de fotografías, se deben seleccionar imágenes JPG o PNG de máximo 2 MB por archivo.
+
+---
+
+<p align="center">
+  <strong>FACEBOOK API REST</strong><br>
+  Desarrollo de servicios REST con Laravel.<br>
+  Universidad Autónoma de Bucaramanga — UNAB
+</p>
