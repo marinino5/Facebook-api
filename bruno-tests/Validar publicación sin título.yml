@@ -1,0 +1,28 @@
+info:
+  name: Validar publicación sin título
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{base_url}}/api/posts"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |
+      
+      {
+        "content": "Esta publicación no tiene título"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
