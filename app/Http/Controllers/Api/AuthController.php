@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Registrar un usuario.
+     *
+     * Permite crear una cuenta proporcionando nombre,
+     * correo electrónico y contraseña.
+     * Al registrarse, el usuario recibe un token de
+     * autenticación generado mediante Laravel Sanctum.
+     */
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -32,6 +40,14 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Iniciar sesión.
+     *
+     * Permite autenticar un usuario mediante su correo
+     * electrónico y contraseña.
+     * Si las credenciales son correctas, devuelve los
+     * datos del usuario y un token de Laravel Sanctum.
+     */
     public function login(Request $request)
     {
         $data = $request->validate([
@@ -56,6 +72,14 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Cerrar sesión.
+     *
+     * Permite cerrar la sesión del usuario autenticado
+     * y revocar el token utilizado en la solicitud.
+     *
+     * @authenticated
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -65,6 +89,14 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Consultar usuario autenticado.
+     *
+     * Devuelve la información del usuario que realiza
+     * la petición utilizando un token válido de Sanctum.
+     *
+     * @authenticated
+     */
     public function me(Request $request)
     {
         return response()->json([

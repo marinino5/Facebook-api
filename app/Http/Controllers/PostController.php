@@ -9,48 +9,74 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    
+    /**
+     * Listar publicaciones.
+     *
+     * Obtiene las publicaciones con sus imágenes y comentarios.
+     * Permite buscar por título o contenido y pagina los resultados
+     * de 10 en 10.
+     *
+     * @queryParam search string Filtrar por título o contenido. Example: viaje
+     * @queryParam page integer Número de página. Example: 1
+     */
+    public function index(Request $request)
+    {
+        $search = trim($request->query('search', ''));
 
-public function index(Request $request)
-{
-    $search = trim($request->query('search', ''));
+        $posts = Post::with(['images', 'comments'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('content', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
-    $posts = Post::with(['images', 'comments'])
-        ->when($search !== '', function ($query) use ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+        $posts->getCollection()->transform(function ($post) {
+            $post->images->transform(function ($img) {
+                $img->image_url = asset('storage/' . $img->image_path);
+
+                return $img;
             });
-        })
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
 
-    $posts->getCollection()->transform(function ($post) {
-        $post->images->transform(function ($img) {
-            $img->image_url = asset('storage/' . $img->image_path);
-            return $img;
+            return $post;
         });
 
-        return $post;
-    });
+        return response()->json($posts, 200);
+    }
 
-    return response()->json($posts, 200);
-}
-
-
+    /**
+     * Consultar una publicación.
+     *
+     * Obtiene una publicación específica con sus imágenes
+     * y comentarios.
+     *
+     * @urlParam id integer required ID de la publicación. Example: 1
+     */
     public function show(int $id)
     {
         $post = Post::with(['images', 'comments'])->findOrFail($id);
 
         $post->images->transform(function ($img) {
             $img->image_url = asset('storage/' . $img->image_path);
+
             return $img;
         });
 
         return response()->json($post, 200);
     }
 
+    /**
+     * Crear una publicación.
+     *
+     * Permite crear una publicación con título, contenido
+     * y múltiples imágenes.
+     * La publicación queda asociada al usuario autenticado.
+     *
+     * @authenticated
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -80,35 +106,54 @@ public function index(Request $request)
         return response()->json($post->load('images'), 201);
     }
 
-    
-public function like(Request $request, int $id)
-{
-    $post = Post::findOrFail($id);
+    /**
+     * Dar like a una publicación.
+     *
+     * Permite que un usuario autenticado dé un único like
+     * a cada publicación.
+     * Si ya registró un like, devuelve un error 409.
+     *
+     * @authenticated
+     * @urlParam id integer required ID de la publicación. Example: 1
+     */
+    public function like(Request $request, int $id)
+    {
+        $post = Post::findOrFail($id);
 
-    $userId = $request->user()->id;
+        $userId = $request->user()->id;
 
-    if ($post->likedBy()->where('users.id', $userId)->exists()) {
+        if ($post->likedBy()->where('users.id', $userId)->exists()) {
+            return response()->json([
+                'message' => 'Ya diste like a esta publicación',
+                'likes_count' => $post->likedBy()->count(),
+            ], 409);
+        }
+
+        $post->likedBy()->attach($userId);
+
+        $likesCount = $post->likedBy()->count();
+
+        $post->update([
+            'likes_count' => $likesCount,
+        ]);
+
         return response()->json([
-            'message' => 'Ya diste like a esta publicación',
-            'likes_count' => $post->likedBy()->count(),
-        ], 409);
+            'message' => 'Me gusta añadido correctamente',
+            'likes_count' => $likesCount,
+        ], 200);
     }
 
-    $post->likedBy()->attach($userId);
-
-    $likesCount = $post->likedBy()->count();
-
-    $post->update([
-        'likes_count' => $likesCount,
-    ]);
-
-    return response()->json([
-        'message' => 'Me gusta añadido correctamente',
-        'likes_count' => $likesCount,
-    ], 200);
-}
-
-
+    /**
+     * Eliminar una publicación.
+     *
+     * Permite eliminar una publicación únicamente cuando
+     * pertenece al usuario autenticado.
+     * También elimina las imágenes almacenadas.
+     * Si el usuario no es el propietario, devuelve un error 403.
+     *
+     * @authenticated
+     * @urlParam id integer required ID de la publicación. Example: 1
+     */
     public function destroy(Request $request, int $id)
     {
         $post = Post::with('images')->findOrFail($id);

@@ -1,0 +1,780 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost:8000"
+        }
+    ],
+    "info": {
+        "name": "Facebook API REST | Documentaci\u00f3n",
+        "_postman_id": "a6c4d2ec-6566-40cf-8b40-a9803052236a",
+        "description": "API REST desarrollada en Laravel para gestionar publicaciones, im\u00e1genes, comentarios, likes y autenticaci\u00f3n con Sanctum. Incluye paginaci\u00f3n, b\u00fasqueda, notificaciones y versionado de rutas.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "Registrar un usuario.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\"}"
+                        },
+                        "description": "Permite crear una cuenta proporcionando nombre,\ncorreo electr\u00f3nico y contrase\u00f1a.\nAl registrarse, el usuario recibe un token de\nautenticaci\u00f3n generado mediante Laravel Sanctum.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Iniciar sesi\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"gbailey@example.net\",\"password\":\"|]|{+-\"}"
+                        },
+                        "description": "Permite autenticar un usuario mediante su correo\nelectr\u00f3nico y contrase\u00f1a.\nSi las credenciales son correctas, devuelve los\ndatos del usuario y un token de Laravel Sanctum.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Listar publicaciones.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "viaje",
+                                    "description": "Filtrar por t\u00edtulo o contenido.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "N\u00famero de p\u00e1gina.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/posts?search=viaje&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene las publicaciones con sus im\u00e1genes y comentarios.\nPermite buscar por t\u00edtulo o contenido y pagina los resultados\nde 10 en 10.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Consultar una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/posts\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una publicaci\u00f3n espec\u00edfica con sus im\u00e1genes\ny comentarios.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Listar comentarios de una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts\/:id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/posts\/:id\/comments",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene todos los comentarios asociados a una\npublicaci\u00f3n, ordenados del m\u00e1s reciente al m\u00e1s antiguo.\n\nEsta consulta es p\u00fablica y no requiere autenticaci\u00f3n.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Cerrar sesi\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permite cerrar la sesi\u00f3n del usuario autenticado\ny revocar el token utilizado en la solicitud."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Consultar usuario autenticado.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Devuelve la informaci\u00f3n del usuario que realiza\nla petici\u00f3n utilizando un token v\u00e1lido de Sanctum."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crear una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/posts"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "title",
+                                    "value": "b",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "content",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "images[]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Permite crear una publicaci\u00f3n con t\u00edtulo, contenido\ny m\u00faltiples im\u00e1genes.\nLa publicaci\u00f3n queda asociada al usuario autenticado."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Eliminar una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/posts\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permite eliminar una publicaci\u00f3n \u00fanicamente cuando\npertenece al usuario autenticado.\nTambi\u00e9n elimina las im\u00e1genes almacenadas.\nSi el usuario no es el propietario, devuelve un error 403."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crear un comentario.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts\/:id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/posts\/:id\/comments",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"Excelente publicaci\u00f3n.\"}"
+                        },
+                        "description": "Permite que un usuario autenticado agregue un\ncomentario a una publicaci\u00f3n existente.\n\nEl sistema identifica autom\u00e1ticamente al usuario\nmediante Laravel Sanctum y guarda su nombre\ne identificador en el comentario.\n\nCuando se registra el comentario, Laravel genera\nuna notificaci\u00f3n por correo para el propietario\nde la publicaci\u00f3n."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Dar like a una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/posts\/:id\/like",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/posts\/:id\/like",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permite que un usuario autenticado d\u00e9 un \u00fanico like\na cada publicaci\u00f3n.\nSi ya registr\u00f3 un like, devuelve un error 409."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Registrar un usuario.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\"}"
+                        },
+                        "description": "Permite crear una cuenta proporcionando nombre,\ncorreo electr\u00f3nico y contrase\u00f1a.\nAl registrarse, el usuario recibe un token de\nautenticaci\u00f3n generado mediante Laravel Sanctum.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Iniciar sesi\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"gbailey@example.net\",\"password\":\"|]|{+-\"}"
+                        },
+                        "description": "Permite autenticar un usuario mediante su correo\nelectr\u00f3nico y contrase\u00f1a.\nSi las credenciales son correctas, devuelve los\ndatos del usuario y un token de Laravel Sanctum.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Listar publicaciones.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts",
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "viaje",
+                                    "description": "Filtrar por t\u00edtulo o contenido.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "N\u00famero de p\u00e1gina.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts?search=viaje&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene las publicaciones con sus im\u00e1genes y comentarios.\nPermite buscar por t\u00edtulo o contenido y pagina los resultados\nde 10 en 10.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Consultar una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una publicaci\u00f3n espec\u00edfica con sus im\u00e1genes\ny comentarios.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Listar comentarios de una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts\/:id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts\/:id\/comments",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene todos los comentarios asociados a una\npublicaci\u00f3n, ordenados del m\u00e1s reciente al m\u00e1s antiguo.\n\nEsta consulta es p\u00fablica y no requiere autenticaci\u00f3n.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Cerrar sesi\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permite cerrar la sesi\u00f3n del usuario autenticado\ny revocar el token utilizado en la solicitud."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Consultar usuario autenticado.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Devuelve la informaci\u00f3n del usuario que realiza\nla petici\u00f3n utilizando un token v\u00e1lido de Sanctum."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crear una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "title",
+                                    "value": "b",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "content",
+                                    "value": "architecto",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "images[]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Permite crear una publicaci\u00f3n con t\u00edtulo, contenido\ny m\u00faltiples im\u00e1genes.\nLa publicaci\u00f3n queda asociada al usuario autenticado."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Eliminar una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permite eliminar una publicaci\u00f3n \u00fanicamente cuando\npertenece al usuario autenticado.\nTambi\u00e9n elimina las im\u00e1genes almacenadas.\nSi el usuario no es el propietario, devuelve un error 403."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Crear un comentario.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts\/:id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts\/:id\/comments",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"Excelente publicaci\u00f3n.\"}"
+                        },
+                        "description": "Permite que un usuario autenticado agregue un\ncomentario a una publicaci\u00f3n existente.\n\nEl sistema identifica autom\u00e1ticamente al usuario\nmediante Laravel Sanctum y guarda su nombre\ne identificador en el comentario.\n\nCuando se registra el comentario, Laravel genera\nuna notificaci\u00f3n por correo para el propietario\nde la publicaci\u00f3n."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Dar like a una publicaci\u00f3n.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/posts\/:id\/like",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/posts\/:id\/like",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "ID de la publicaci\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permite que un usuario autenticado d\u00e9 un \u00fanico like\na cada publicaci\u00f3n.\nSi ya registr\u00f3 un like, devuelve un error 409."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

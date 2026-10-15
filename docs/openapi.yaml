@@ -1,0 +1,474 @@
+openapi: 3.0.3
+info:
+  title: 'Facebook API REST | Documentación'
+  description: 'API REST desarrollada en Laravel para gestionar publicaciones, imágenes, comentarios, likes y autenticación con Sanctum. Incluye paginación, búsqueda, notificaciones y versionado de rutas.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+tags:
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Para obtener un token de autenticación, realiza una petición POST a `/api/login` o `/api/v1/login` con tu correo y contraseña. Copia el campo `token` de la respuesta y utilízalo como Bearer Token en las rutas protegidas.'
+security:
+  -
+    default: []
+paths:
+  /api/register:
+    post:
+      summary: 'Registrar un usuario.'
+      operationId: registrarUnUsuario
+      description: "Permite crear una cuenta proporcionando nombre,\ncorreo electrónico y contraseña.\nAl registrarse, el usuario recibe un token de\nautenticación generado mediante Laravel Sanctum."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: zbailey@example.net
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: '-0pBNvYgxw'
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/login:
+    post:
+      summary: 'Iniciar sesión.'
+      operationId: iniciarSesin
+      description: "Permite autenticar un usuario mediante su correo\nelectrónico y contraseña.\nSi las credenciales son correctas, devuelve los\ndatos del usuario y un token de Laravel Sanctum."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: gbailey@example.net
+                password:
+                  type: string
+                  description: ''
+                  example: '|]|{+-'
+              required:
+                - email
+                - password
+      security: []
+  /api/posts:
+    get:
+      summary: 'Listar publicaciones.'
+      operationId: listarPublicaciones
+      description: "Obtiene las publicaciones con sus imágenes y comentarios.\nPermite buscar por título o contenido y pagina los resultados\nde 10 en 10."
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Filtrar por título o contenido.'
+          example: viaje
+          required: false
+          schema:
+            type: string
+            description: 'Filtrar por título o contenido.'
+            example: viaje
+        -
+          in: query
+          name: page
+          description: 'Número de página.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Número de página.'
+            example: 1
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Crear una publicación.'
+      operationId: crearUnaPublicacin
+      description: "Permite crear una publicación con título, contenido\ny múltiples imágenes.\nLa publicación queda asociada al usuario autenticado."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                content:
+                  type: string
+                  description: ''
+                  example: architecto
+                images:
+                  type: array
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - title
+                - content
+  '/api/posts/{id}':
+    get:
+      summary: 'Consultar una publicación.'
+      operationId: consultarUnaPublicacin
+      description: "Obtiene una publicación específica con sus imágenes\ny comentarios."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'Eliminar una publicación.'
+      operationId: eliminarUnaPublicacin
+      description: "Permite eliminar una publicación únicamente cuando\npertenece al usuario autenticado.\nTambién elimina las imágenes almacenadas.\nSi el usuario no es el propietario, devuelve un error 403."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la publicación.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/posts/{id}/comments':
+    get:
+      summary: 'Listar comentarios de una publicación.'
+      operationId: listarComentariosDeUnaPublicacin
+      description: "Obtiene todos los comentarios asociados a una\npublicación, ordenados del más reciente al más antiguo.\n\nEsta consulta es pública y no requiere autenticación."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Crear un comentario.'
+      operationId: crearUnComentario
+      description: "Permite que un usuario autenticado agregue un\ncomentario a una publicación existente.\n\nEl sistema identifica automáticamente al usuario\nmediante Laravel Sanctum y guarda su nombre\ne identificador en el comentario.\n\nCuando se registra el comentario, Laravel genera\nuna notificación por correo para el propietario\nde la publicación."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'Contenido del comentario.'
+                  example: 'Excelente publicación.'
+              required:
+                - content
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la publicación.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/logout:
+    post:
+      summary: 'Cerrar sesión.'
+      operationId: cerrarSesin
+      description: "Permite cerrar la sesión del usuario autenticado\ny revocar el token utilizado en la solicitud."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+  /api/me:
+    get:
+      summary: 'Consultar usuario autenticado.'
+      operationId: consultarUsuarioAutenticado
+      description: "Devuelve la información del usuario que realiza\nla petición utilizando un token válido de Sanctum."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+  '/api/posts/{id}/like':
+    post:
+      summary: 'Dar like a una publicación.'
+      operationId: darLikeAUnaPublicacin
+      description: "Permite que un usuario autenticado dé un único like\na cada publicación.\nSi ya registró un like, devuelve un error 409."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la publicación.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/v1/register:
+    post:
+      summary: 'Registrar un usuario.'
+      operationId: registrarUnUsuario
+      description: "Permite crear una cuenta proporcionando nombre,\ncorreo electrónico y contraseña.\nAl registrarse, el usuario recibe un token de\nautenticación generado mediante Laravel Sanctum."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: zbailey@example.net
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: '-0pBNvYgxw'
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/v1/login:
+    post:
+      summary: 'Iniciar sesión.'
+      operationId: iniciarSesin
+      description: "Permite autenticar un usuario mediante su correo\nelectrónico y contraseña.\nSi las credenciales son correctas, devuelve los\ndatos del usuario y un token de Laravel Sanctum."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: gbailey@example.net
+                password:
+                  type: string
+                  description: ''
+                  example: '|]|{+-'
+              required:
+                - email
+                - password
+      security: []
+  /api/v1/posts:
+    get:
+      summary: 'Listar publicaciones.'
+      operationId: listarPublicaciones
+      description: "Obtiene las publicaciones con sus imágenes y comentarios.\nPermite buscar por título o contenido y pagina los resultados\nde 10 en 10."
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Filtrar por título o contenido.'
+          example: viaje
+          required: false
+          schema:
+            type: string
+            description: 'Filtrar por título o contenido.'
+            example: viaje
+        -
+          in: query
+          name: page
+          description: 'Número de página.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Número de página.'
+            example: 1
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Crear una publicación.'
+      operationId: crearUnaPublicacin
+      description: "Permite crear una publicación con título, contenido\ny múltiples imágenes.\nLa publicación queda asociada al usuario autenticado."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                content:
+                  type: string
+                  description: ''
+                  example: architecto
+                images:
+                  type: array
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - title
+                - content
+  '/api/v1/posts/{id}':
+    get:
+      summary: 'Consultar una publicación.'
+      operationId: consultarUnaPublicacin
+      description: "Obtiene una publicación específica con sus imágenes\ny comentarios."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'Eliminar una publicación.'
+      operationId: eliminarUnaPublicacin
+      description: "Permite eliminar una publicación únicamente cuando\npertenece al usuario autenticado.\nTambién elimina las imágenes almacenadas.\nSi el usuario no es el propietario, devuelve un error 403."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la publicación.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/posts/{id}/comments':
+    get:
+      summary: 'Listar comentarios de una publicación.'
+      operationId: listarComentariosDeUnaPublicacin
+      description: "Obtiene todos los comentarios asociados a una\npublicación, ordenados del más reciente al más antiguo.\n\nEsta consulta es pública y no requiere autenticación."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Crear un comentario.'
+      operationId: crearUnComentario
+      description: "Permite que un usuario autenticado agregue un\ncomentario a una publicación existente.\n\nEl sistema identifica automáticamente al usuario\nmediante Laravel Sanctum y guarda su nombre\ne identificador en el comentario.\n\nCuando se registra el comentario, Laravel genera\nuna notificación por correo para el propietario\nde la publicación."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'Contenido del comentario.'
+                  example: 'Excelente publicación.'
+              required:
+                - content
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la publicación.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/v1/logout:
+    post:
+      summary: 'Cerrar sesión.'
+      operationId: cerrarSesin
+      description: "Permite cerrar la sesión del usuario autenticado\ny revocar el token utilizado en la solicitud."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+  /api/v1/me:
+    get:
+      summary: 'Consultar usuario autenticado.'
+      operationId: consultarUsuarioAutenticado
+      description: "Devuelve la información del usuario que realiza\nla petición utilizando un token válido de Sanctum."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+  '/api/v1/posts/{id}/like':
+    post:
+      summary: 'Dar like a una publicación.'
+      operationId: darLikeAUnaPublicacin
+      description: "Permite que un usuario autenticado dé un único like\na cada publicación.\nSi ya registró un like, devuelve un error 409."
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID de la publicación.'
+        example: 1
+        required: true
+        schema:
+          type: integer
