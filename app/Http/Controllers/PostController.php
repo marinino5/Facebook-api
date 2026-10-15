@@ -10,11 +10,21 @@ use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
     
-public function index()
+
+public function index(Request $request)
 {
+    $search = trim($request->query('search', ''));
+
     $posts = Post::with(['images', 'comments'])
+        ->when($search !== '', function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+        })
         ->latest()
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString();
 
     $posts->getCollection()->transform(function ($post) {
         $post->images->transform(function ($img) {
@@ -27,6 +37,7 @@ public function index()
 
     return response()->json($posts, 200);
 }
+
 
     public function show(int $id)
     {
