@@ -40,7 +40,7 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'images' => 'nullable|array',
@@ -48,8 +48,9 @@ class PostController extends Controller
         ]);
 
         $post = Post::create([
-            'title' => $request->title,
-            'content' => $request->content,
+            'user_id' => $request->user()->id,
+            'title' => $data['title'],
+            'content' => $data['content'],
         ]);
 
         if ($request->hasFile('images')) {
@@ -78,9 +79,15 @@ class PostController extends Controller
         ], 200);
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::with('images')->findOrFail($id);
+
+        if ((int) $post->user_id !== (int) $request->user()->id) {
+            return response()->json([
+                'message' => 'No tienes permiso para eliminar esta publicación',
+            ], 403);
+        }
 
         foreach ($post->images as $image) {
             Storage::disk('public')->delete($image->image_path);

@@ -1,0 +1,30 @@
+info:
+  name: Registrar usuario
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{base_url}}/api/register"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |
+      {
+        "name": "Usuario Dos",
+        "email": "prueba.api.segundo2026@example.com",
+        "password": "Prueba12345!",
+        "password_confirmation": "Prueba12345!"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

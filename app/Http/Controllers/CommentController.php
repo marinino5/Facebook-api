@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
@@ -19,16 +20,16 @@ class CommentController extends Controller
 
     public function store(Request $request, int $postId)
     {
-        $request->validate([
-            'author' => 'required|string|max:100',
+        $data = $request->validate([
             'content' => 'required|string',
         ]);
 
         $post = Post::findOrFail($postId);
 
         $comment = $post->comments()->create([
-            'author' => $request->author,
-            'content' => $request->content,
+            'user_id' => $request->user()->id,
+            'author' => Str::substr($request->user()->name, 0, 100),
+            'content' => $data['content'],
         ]);
 
         return response()->json($comment, 201);

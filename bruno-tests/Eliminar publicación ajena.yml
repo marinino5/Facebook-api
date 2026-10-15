@@ -1,0 +1,21 @@
+info:
+  name: Eliminar publicación ajena
+  type: http
+  seq: 15
+
+http:
+  method: DELETE
+  url: "{{base_url}}/api/posts/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: 5|nQGbB5ixamZ9AIIC5iApyHqFiQ84NzYAc8Mz1TRT2ef09f35
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
