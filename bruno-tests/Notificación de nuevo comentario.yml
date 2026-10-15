@@ -1,0 +1,28 @@
+info:
+  name: Notificación de nuevo comentario
+  type: http
+  seq: 20
+
+http:
+  method: POST
+  url: "{{base_url}}/api/posts/1/comments"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: json
+    data: |
+      
+      {
+        "content": "Hola, me parece muy interesante tu publicación. Excelente contenido."
+      }
+  auth:
+    type: bearer
+    token: 8|0W9P29KLfcfI1KAnCwfJGizqZUyAKQeDNxPy6Mon5364704c
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

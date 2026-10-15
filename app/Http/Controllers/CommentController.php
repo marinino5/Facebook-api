@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewCommentMail;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CommentController extends Controller
@@ -24,7 +26,7 @@ class CommentController extends Controller
             'content' => 'required|string',
         ]);
 
-        $post = Post::findOrFail($postId);
+        $post = Post::with('user')->findOrFail($postId);
 
         $comment = $post->comments()->create([
             'user_id' => $request->user()->id,
@@ -32,6 +34,12 @@ class CommentController extends Controller
             'content' => $data['content'],
         ]);
 
+        if ($post->user && $post->user->email) {
+            Mail::to($post->user->email)
+                ->send(new NewCommentMail($comment));
+        }
+
         return response()->json($comment, 201);
     }
 }
+
