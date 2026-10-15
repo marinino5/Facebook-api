@@ -69,17 +69,34 @@ public function index()
         return response()->json($post->load('images'), 201);
     }
 
-    public function like(int $id)
-    {
-        $post = Post::findOrFail($id);
+    
+public function like(Request $request, int $id)
+{
+    $post = Post::findOrFail($id);
 
-        $post->increment('likes_count');
+    $userId = $request->user()->id;
 
+    if ($post->likedBy()->where('users.id', $userId)->exists()) {
         return response()->json([
-            'message' => 'Me gusta añadido correctamente',
-            'likes_count' => $post->likes_count,
-        ], 200);
+            'message' => 'Ya diste like a esta publicación',
+            'likes_count' => $post->likedBy()->count(),
+        ], 409);
     }
+
+    $post->likedBy()->attach($userId);
+
+    $likesCount = $post->likedBy()->count();
+
+    $post->update([
+        'likes_count' => $likesCount,
+    ]);
+
+    return response()->json([
+        'message' => 'Me gusta añadido correctamente',
+        'likes_count' => $likesCount,
+    ], 200);
+}
+
 
     public function destroy(Request $request, int $id)
     {

@@ -17,6 +17,12 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function likedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_user')
+            ->withTimestamps();
+    }
+
     protected function casts(): array
     {
         return [
@@ -25,4 +31,3 @@ class User extends Authenticatable
         ];
     }
 }
-
