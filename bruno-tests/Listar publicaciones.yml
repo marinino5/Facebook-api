@@ -5,10 +5,14 @@ info:
 
 http:
   method: GET
-  url: "{{base_url}}/api/posts"
+  url: "{{base_url}}/api/posts?page=1"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: page
+      value: "1"
+      type: query
   auth: inherit
 
 settings:

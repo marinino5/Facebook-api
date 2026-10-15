@@ -9,22 +9,24 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    public function index()
-    {
-        $posts = Post::with(['images', 'comments'])
-            ->latest()
-            ->get()
-            ->map(function ($post) {
-                $post->images->transform(function ($img) {
-                    $img->image_url = asset('storage/' . $img->image_path);
-                    return $img;
-                });
+    
+public function index()
+{
+    $posts = Post::with(['images', 'comments'])
+        ->latest()
+        ->paginate(10);
 
-                return $post;
-            });
+    $posts->getCollection()->transform(function ($post) {
+        $post->images->transform(function ($img) {
+            $img->image_url = asset('storage/' . $img->image_path);
+            return $img;
+        });
 
-        return response()->json($posts, 200);
-    }
+        return $post;
+    });
+
+    return response()->json($posts, 200);
+}
 
     public function show(int $id)
     {
