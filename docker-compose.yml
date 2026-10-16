@@ -1,0 +1,53 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: facebook-api-app
+    container_name: facebook_app
+    ports:
+      - "8080:10000"
+    env_file:
+      - .env
+    environment:
+      PORT: "10000"
+      APP_URL: http://localhost:8080
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_DATABASE: facebook_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${POSTGRES_LOCAL_PASSWORD:?Configurar POSTGRES_LOCAL_PASSWORD}
+    volumes:
+      - uploads:/var/www/storage/app/public
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - net
+
+  db:
+    image: postgres:15-alpine
+    container_name: facebook_db
+    environment:
+      POSTGRES_DB: facebook_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_LOCAL_PASSWORD:?Configurar POSTGRES_LOCAL_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d facebook_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - net
+
+volumes:
+  pgdata:
+  uploads:
+
+networks:
+  net:
+    driver: bridge
