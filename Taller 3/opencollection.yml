@@ -1,0 +1,26 @@
+opencollection: 1.0.0
+
+info:
+  name: "Taller 3: Facebook API"
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  variables:
+    - name: base_url
+      value: https://facebook-api-ydrl.onrender.com
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
